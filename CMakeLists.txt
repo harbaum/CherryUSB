@@ -59,7 +59,6 @@ sdk_library_add_sources(class/vendor/xbox/usbh_xbox.c)
 sdk_add_link_libraries(
 -ucdc_acm_class_driver 
 -uhid_class_driver
--uxbox_class_driver 
 -umsc_class_driver 
 -uvideo_ctrl_class_driver 
 -uaudio_ctrl_class_driver)
