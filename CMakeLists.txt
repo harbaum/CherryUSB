@@ -4,11 +4,11 @@ sdk_add_include_directories(osal)
 sdk_add_include_directories(core)
 sdk_add_include_directories(class/cdc)
 sdk_add_include_directories(class/hid)
-sdk_add_include_directories(class/xbox)
 sdk_add_include_directories(class/msc)
 sdk_add_include_directories(class/audio)
 sdk_add_include_directories(class/video)
 sdk_add_include_directories(class/hub)
+sdk_add_include_directories(class/vendor/xbox)
 
 sdk_add_compile_definitions(-DCONFIG_CHERRYUSB)
 
@@ -51,10 +51,10 @@ sdk_library_add_sources(osal/usb_osal_freertos.c)
 sdk_library_add_sources(class/cdc/usbh_cdc_acm.c)
 sdk_library_add_sources(class/msc/usbh_msc.c)
 sdk_library_add_sources(class/hid/usbh_hid.c)
-sdk_library_add_sources(class/xbox/usbh_xbox.c)
 sdk_library_add_sources(class/hub/usbh_hub.c)
 sdk_library_add_sources(class/video/usbh_video.c)
 sdk_library_add_sources(class/audio/usbh_audio.c)
+sdk_library_add_sources(class/vendor/xbox/usbh_xbox.c)
 
 sdk_add_link_libraries(
 -ucdc_acm_class_driver 
