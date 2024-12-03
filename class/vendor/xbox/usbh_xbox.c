@@ -38,6 +38,29 @@ static void usbh_xbox_class_free(struct usbh_xbox *xbox_class)
     memset(xbox_class, 0, sizeof(struct usbh_xbox));
 }
 
+int usbh_xbox_set_led(struct usbh_xbox *xbox_class) {
+  int ret;
+  struct usbh_urb *urb = &xbox_class->intout_urb;
+  uint8_t led_cmd[] = {0x01, 0x03, 0x02}; // led command: 1 flashes, then on
+
+  /*
+    This tries to replicate what the MiST firmware does here      
+    uint8_t led_cmd[] = {0x01, 0x03, 0x02}; // led command: 1 flashes, then on
+    if(rcode = usb_out_transfer(dev, &dev->xbox_info.outEp, sizeof(led_cmd), led_cmd)
+  */
+  
+  if (!xbox_class || !xbox_class->hport) {
+    return -USB_ERR_INVAL;
+  }
+  
+  usbh_bulk_urb_fill(urb, xbox_class->hport, xbox_class->intout, led_cmd, sizeof(led_cmd),  0xfffffff, NULL, NULL);
+  ret = usbh_submit_urb(urb);
+  if (ret == 0) {
+    ret = urb->actual_length;
+  }
+  return ret;
+}
+
 int usbh_xbox_connect(struct usbh_hubport *hport, uint8_t intf)
 {
     struct usb_endpoint_descriptor *ep_desc;
@@ -50,6 +73,11 @@ int usbh_xbox_connect(struct usbh_hubport *hport, uint8_t intf)
 
     xbox_class->hport = hport;
     xbox_class->intf = intf;
+    
+    int ret = usbh_xbox_set_led(xbox_class);
+    if (ret < 0) {
+        USB_LOG_WRN("xbox set_led failed\r\n");
+    }
 
     hport->config.intf[intf].priv = xbox_class;
 
